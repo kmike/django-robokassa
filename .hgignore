@@ -1,0 +1,32 @@
+syntax: glob
+
+#IDE files
+.settings/*
+.project
+.pydevproject
+.cache/*
+nbproject/*
+.buildpath
+build.properties
+
+#temp files
+*.pyc
+*.pyo
+*.orig
+*~
+
+#misc files
+pip-log.txt
+
+#os files
+.DS_Store
+Thumbs.db
+
+#doc files
+docs/_build/doctrees/
+
+#setup files
+build/
+dist/
+.build/
+MANIFEST
