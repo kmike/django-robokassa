@@ -3,7 +3,10 @@
 from hashlib import md5
 from urllib import urlencode
 from django import forms
-from robokassa.conf import LOGIN, PASSWORD1
+
+from robokassa.conf import LOGIN, PASSWORD1, PASSWORD2
+from robokassa.models import SuccessNotification
+from robokassa.conf import STRICT_CHECK
 
 class RobokassaForm(forms.Form):
 
@@ -64,3 +67,48 @@ class RobokassaForm(forms.Form):
         params = ':'.join(filter(None, [_val('MrchLogin'), _val('OutSum'), _val('InvId'), PASSWORD1]))
         return md5(params).hexdigest().upper()
 
+
+class ResultURLForm(forms.Form):
+    '''Форма для приема результатов и проверки контрольной суммы '''
+    OutSum = forms.CharField(max_length=15)
+    InvId = forms.IntegerField(min_value=0)
+    SignatureValue = forms.CharField(max_length=32)
+
+    def clean(self):
+        if self.cleaned_data['SignatureValue'].upper() != self._get_signature():
+            raise forms.ValidationError(u'Ошибка в контрольной сумме')
+        return self.cleaned_data
+
+    def _get_signature(self):
+        _val = lambda name: unicode(self.cleaned_data[name])
+        params = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD2])
+        return md5(params).hexdigest().upper()
+
+
+class _RedirectPageForm(ResultURLForm):
+    '''Форма для проверки контрольной суммы на страницах Success и Fail'''
+
+    Culture = forms.CharField(max_length=3)
+
+    def _get_signature(self):
+        _val = lambda name: unicode(self.cleaned_data[name])
+        params = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD1])
+        return md5(params).hexdigest().upper()
+
+
+class FailRedirectForm(_RedirectPageForm):
+    pass
+
+class SuccessRedirectForm(_RedirectPageForm):
+    """ Форма для обработки страницы Success с дополнительной защитой. Она
+    проверяет, что ROBOKASSA предварительно уведомила систему о платеже,
+    отправив запрос на ResultURL. """
+
+    def clean(self):
+        data = super(SuccessRedirectForm, self).clean()
+        if STRICT_CHECK:
+            try:
+                notification = SuccessNotification.objects.get(InvId=data['InvId'])
+            except SuccessNotification.DoesNotExist:
+                raise forms.ValidationError(u'От ROBOKASSA не было предварительного уведомления')
+        return data
