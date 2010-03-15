@@ -31,10 +31,6 @@ ROBOKASSA (http://robokassa.ru/Doc/Ru/Interface.aspx). Приложение ре
 
     $ python manage.py syncdb
 
-Если используется South, то вместо syncdb нужно сделать ::
-
-    $ python manage.py migrate
-
 
 Настройка
 =========
