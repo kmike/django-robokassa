@@ -42,10 +42,20 @@ ROBOKASSA (http://robokassa.ru/Doc/Ru/Interface.aspx). Приложение ре
 В settings.py нужно указать следующие настройки:
 
 * ROBOKASSA_LOGIN - логин
-* ROBOKASSA_PASSWORD - пароль
+* ROBOKASSA_PASSWORD - пароль №1
 
-Необязательный параметар: ASSIST_TEST_MODE - включен ли тестовый режим.
-По умолчанию False (т.е. включен боевой режим).
+Необязательные параметры:
+
+* ROBOKASSA_PASSWORD2 - пароль №2 (используется, если нужна автоматическая
+  обработка результатов)
+
+* ROBOKASSA_USE_POST - используется ли метод POST при приеме результатов от
+  ROBOKASSA. По умолчанию - True. Считается, что для Result URL, Success URL и
+  Fail URL выбран один и тот же метод.
+
+* ROBOKASSA_STRICT_CHECK - использовать ли строгую проверку (требовать
+  предварительного уведомления на ResultURL). По умолчанию - True.
+
 
 Использование
 =============
