@@ -31,6 +31,10 @@ ROBOKASSA (http://robokassa.ru/Doc/Ru/Interface.aspx). Приложение ре
 
     $ python manage.py syncdb
 
+или, если используется South, ::
+
+    $ python manage.py migrate
+
 
 Настройка
 =========
@@ -56,4 +60,38 @@ ROBOKASSA (http://robokassa.ru/Doc/Ru/Interface.aspx). Приложение ре
 Использование
 =============
 
-TODO: написать
+urls.py
+-------
+
+Для настройки Result URL, Success URL и Fail URL можно подключить
+модуль robokassa.urls::
+
+    urlpatterns = patterns('',
+        #...
+        url(r'^robokassa/', include('robokassa.urls')),
+        #...
+    )
+
+Адреса, которые нужно указывать в панели robokassa, в этом случае будут иметь вид
+
+* Result URL: http://yoursite.ru/robokassa/result/
+* Success URL: http://yoursite.ru/robokassa/success/
+* Fail URL: http://yoursite.ru/robokassa/fail/
+
+
+Шаблоны
+-------
+
+* ``robokassa/success.html`` - показывается в случае успешной оплаты. В
+  контексте есть переменная form типа `SuccessRedirectForm`, а также InvId
+  и OrderSum с параметрами заказа.
+
+* ``robokassa/fail.html`` - показывается в случае неуспешной оплаты. В
+  контексте есть переменная form типа `SuccessRedirectForm`, а также InvId
+  и OrderSum с параметрами заказа.
+
+* ``robokassa/error.html`` - показывается при ошибочном запросе к странице
+  "успех" или "неудача" (например, ошибка в контрольной сумме). В контексте
+  есть переменная form класса `FailRedirectForm` или `SuccessRedirectForm`.
+
+
