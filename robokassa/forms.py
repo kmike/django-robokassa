@@ -5,8 +5,8 @@ from urllib import urlencode
 from django import forms
 
 from robokassa.conf import LOGIN, PASSWORD1, PASSWORD2
+from robokassa.conf import STRICT_CHECK, FORM_TARGET
 from robokassa.models import SuccessNotification
-from robokassa.conf import STRICT_CHECK
 
 class RobokassaForm(forms.Form):
 
@@ -36,7 +36,7 @@ class RobokassaForm(forms.Form):
 
     # Параметр с URL'ом, на который форма должны быть отправлена.
     # Может пригодиться для использования в шаблоне.
-    target = u'https://merchant.roboxchange.com/Index.aspx'
+    target = FORM_TARGET
 
     def get_redirect_url(self):
         """ Получить URL с GET-параметрами, соответствующими значениям полей в

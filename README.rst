@@ -56,6 +56,9 @@ ROBOKASSA (http://robokassa.ru/Doc/Ru/Interface.aspx). Приложение ре
 * ROBOKASSA_STRICT_CHECK - использовать ли строгую проверку (требовать
   предварительного уведомления на ResultURL). По умолчанию - True.
 
+* ROBOKASSA_TEST_MODE - включен ли тестовый режим. По умолчанию False
+  (т.е. включен боевой режим).
+
 
 Использование
 =============
