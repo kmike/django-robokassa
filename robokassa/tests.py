@@ -17,6 +17,10 @@ class RobokassaFormTest(TestCase):
         self.assertEqual(len(self.form.fields['SignatureValue'].initial), 32)
         self.assertEqual(self.form.fields['SignatureValue'].initial, '59506E1E5BBE937B31386DD981788C9B')
 
+    def testSignatureMissingParams(self):
+        form = RobokassaForm(initial = {'InvId': 5})
+        self.assertEqual(form.fields['SignatureValue'].initial, 'DCEDD9C5F84C1E6CB73AB52CA9FAA8B3')
+
     def testRedirectUrl(self):
         url = "https://merchant.roboxchange.com/Index.aspx?MrchLogin=test_login&OutSum=100.0&InvId=58&Desc=%D5%EE%EB%EE%E4%E8%EB%FC%ED%E8%EA+%22%C1%E8%F0%FE%F1%E0%22&SignatureValue=59506E1E5BBE937B31386DD981788C9B&Email=vasia%40example.com"
         self.assertEqual(self.form.get_redirect_url(), url)
