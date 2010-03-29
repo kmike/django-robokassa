@@ -63,7 +63,7 @@ class RobokassaForm(forms.Form):
         self.fields['SignatureValue'].initial = self._get_signature()
 
     def _get_signature(self):
-        _val = lambda name: self.fields[name].initial
+        _val = lambda name: unicode(self.initial[name] if name in self.initial else self.fields[name].initial)
         params = ':'.join(filter(None, [_val('MrchLogin'), _val('OutSum'), _val('InvId'), PASSWORD1]))
         return md5(params).hexdigest().upper()
 

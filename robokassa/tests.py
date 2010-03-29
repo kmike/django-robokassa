@@ -15,10 +15,10 @@ class RobokassaFormTest(TestCase):
 
     def testSignature(self):
         self.assertEqual(len(self.form.fields['SignatureValue'].initial), 32)
-        self.assertEqual(self.form.fields['SignatureValue'].initial, 'FBA6DB00B521BB848CD44D0F01D7BFC8')
+        self.assertEqual(self.form.fields['SignatureValue'].initial, '59506E1E5BBE937B31386DD981788C9B')
 
     def testRedirectUrl(self):
-        url = "https://merchant.roboxchange.com/Index.aspx?MrchLogin=test_login&OutSum=100.0&InvId=58&Desc=%D5%EE%EB%EE%E4%E8%EB%FC%ED%E8%EA+%22%C1%E8%F0%FE%F1%E0%22&SignatureValue=FBA6DB00B521BB848CD44D0F01D7BFC8&Email=vasia%40example.com"
+        url = "https://merchant.roboxchange.com/Index.aspx?MrchLogin=test_login&OutSum=100.0&InvId=58&Desc=%D5%EE%EB%EE%E4%E8%EB%FC%ED%E8%EA+%22%C1%E8%F0%FE%F1%E0%22&SignatureValue=59506E1E5BBE937B31386DD981788C9B&Email=vasia%40example.com"
         self.assertEqual(self.form.get_redirect_url(), url)
 
 
