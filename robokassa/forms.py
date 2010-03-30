@@ -32,7 +32,7 @@ class RobokassaForm(forms.Form):
     Email = forms.CharField(max_length=100, required=False)
 
     # язык общения с клиентом (en или ru)
-    Culture = forms.CharField(max_length=2, required=False)
+    Culture = forms.CharField(max_length=6, required=False)
 
     # Параметр с URL'ом, на который форма должны быть отправлена.
     # Может пригодиться для использования в шаблоне.
