@@ -42,7 +42,7 @@ ROBOKASSA (http://robokassa.ru/Doc/Ru/Interface.aspx). Приложение ре
 В settings.py нужно указать следующие настройки:
 
 * ROBOKASSA_LOGIN - логин
-* ROBOKASSA_PASSWORD - пароль №1
+* ROBOKASSA_PASSWORD1 - пароль №1
 
 Необязательные параметры:
 
