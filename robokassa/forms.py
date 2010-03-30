@@ -32,7 +32,7 @@ class RobokassaForm(forms.Form):
     Email = forms.CharField(max_length=100, required=False)
 
     # язык общения с клиентом (en или ru)
-    Culture = forms.CharField(max_length=6, required=False)
+    Culture = forms.CharField(max_length=10, required=False)
 
     # Параметр с URL'ом, на который форма должны быть отправлена.
     # Может пригодиться для использования в шаблоне.
@@ -96,7 +96,7 @@ class ResultURLForm(forms.Form):
 class _RedirectPageForm(ResultURLForm):
     '''Форма для проверки контрольной суммы на страницах Success и Fail'''
 
-    Culture = forms.CharField(max_length=3)
+    Culture = forms.CharField(max_length=10)
 
     def _get_signature_string(self):
         _val = lambda name: unicode(self.cleaned_data[name])
