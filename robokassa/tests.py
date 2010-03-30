@@ -2,6 +2,7 @@
 from unittest import TestCase
 from django.test import TestCase as DjangoTestCase
 from robokassa.forms import RobokassaForm, ResultURLForm
+from robokassa.conf import PASSWORD1, LOGIN
 
 class RobokassaFormTest(TestCase):
 
@@ -14,11 +15,13 @@ class RobokassaFormTest(TestCase):
                     })
 
     def testSignature(self):
+        self.assertEqual(self.form._get_signature_string(), '%s:100.0:58:%s' % (LOGIN, PASSWORD1))
         self.assertEqual(len(self.form.fields['SignatureValue'].initial), 32)
         self.assertEqual(self.form.fields['SignatureValue'].initial, '59506E1E5BBE937B31386DD981788C9B')
 
     def testSignatureMissingParams(self):
         form = RobokassaForm(initial = {'InvId': 5})
+        self.assertEqual(form._get_signature_string(), '%s::5:%s' % (LOGIN, PASSWORD1))
         self.assertEqual(form.fields['SignatureValue'].initial, 'DCEDD9C5F84C1E6CB73AB52CA9FAA8B3')
 
     def testRedirectUrl(self):

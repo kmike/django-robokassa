@@ -62,14 +62,16 @@ class RobokassaForm(forms.Form):
             self.fields[field].widget = forms.HiddenInput()
         self.fields['SignatureValue'].initial = self._get_signature()
 
-    def _get_signature(self):
+    def _get_signature_string(self):
         def _val(name):
             value = self.initial[name] if name in self.initial else self.fields[name].initial
             if value is None:
                 return ''
             return unicode(value)
-        params = ':'.join([_val('MrchLogin'), _val('OutSum'), _val('InvId'), PASSWORD1])
-        return md5(params).hexdigest().upper()
+        return ':'.join([_val('MrchLogin'), _val('OutSum'), _val('InvId'), PASSWORD1])
+
+    def _get_signature(self):
+        return md5(self._get_signature_string()).hexdigest().upper()
 
 
 class ResultURLForm(forms.Form):
@@ -83,10 +85,12 @@ class ResultURLForm(forms.Form):
             raise forms.ValidationError(u'Ошибка в контрольной сумме')
         return self.cleaned_data
 
-    def _get_signature(self):
+    def _get_signature_string(self):
         _val = lambda name: unicode(self.cleaned_data[name])
-        params = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD2])
-        return md5(params).hexdigest().upper()
+        return ':'.join([_val('OutSum'), _val('InvId'), PASSWORD2])
+
+    def _get_signature(self):
+        return md5(self._get_signature_string()).hexdigest().upper()
 
 
 class _RedirectPageForm(ResultURLForm):
@@ -94,10 +98,9 @@ class _RedirectPageForm(ResultURLForm):
 
     Culture = forms.CharField(max_length=3)
 
-    def _get_signature(self):
+    def _get_signature_string(self):
         _val = lambda name: unicode(self.cleaned_data[name])
-        params = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD1])
-        return md5(params).hexdigest().upper()
+        return ':'.join([_val('OutSum'), _val('InvId'), PASSWORD1])
 
 
 class FailRedirectForm(_RedirectPageForm):
