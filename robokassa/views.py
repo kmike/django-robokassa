@@ -15,14 +15,15 @@ def receive_result(request):
     if form.is_valid():
         id, sum = form.cleaned_data['InvId'], form.cleaned_data['OrderSum']
 
-        # дополнительные действия с заказом (например, смену его статуса) можно
-        # осуществить в обработчике сигнала robokassa.signals.result_received
-        result_received.send(sender = receive_result, InvId = id, OrdSum = sum)
-
         # сохраняем данные об успешном уведомлении в базе, чтобы
         # можно было выполнить дополнительную проверку на странице успешного
         # заказа
-        SuccessNotification.objects.create(InvId = id, OrdSum = sum)
+        notification = SuccessNotification.objects.create(InvId = id, OrdSum = sum)
+
+        # дополнительные действия с заказом (например, смену его статуса) можно
+        # осуществить в обработчике сигнала robokassa.signals.result_received
+        result_received.send(sender = notification, InvId = id, OrdSum = sum)
+
 
         return HttpResponse('OK'+id)
     return HttpResponse('error: bad signature')
@@ -39,7 +40,7 @@ def success(request, template_name='robokassa/success.html', extra_context=None,
 
         # в случае, когда не используется строгая проверка, действия с заказом
         # можно осуществлять в обработчике сигнала robokassa.signals.success_page_visited
-        success_page_visited.send(sender = success, InvId = id, OrdSum = sum)
+        success_page_visited.send(sender = form, InvId = id, OrdSum = sum)
 
         context = {'InvId': id, 'OrderSum': sum, 'form': form}
         context.update(extra_context or {})
@@ -60,7 +61,7 @@ def fail(request, template_name='robokassa/fail.html', extra_context=None,
         # дополнительные действия с заказом (например, смену его статуса для
         # разблокировки товара на складе) можно осуществить в обработчике
         # сигнала robokassa.signals.fail_page_visited
-        fail_page_visited.send(sender = success, InvId = id, OrdSum = sum)
+        fail_page_visited.send(sender = form, InvId = id, OrdSum = sum)
 
         context = {'InvId': id, 'OrderSum': sum, 'form': form}
         context.update(extra_context or {})
