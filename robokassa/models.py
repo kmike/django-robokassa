@@ -13,5 +13,5 @@ class SuccessNotification(models.Model):
         return u'#%d: %s (%s)' % (self.InvId, self.OutSum, self.created_at)
 
     class Meta:
-        verbose_name = u'Успешное уведомление о платеже'
-        verbose_name_plural = u'Успешные уведомления о платежах (ROBOKASSA)'
+        verbose_name = u'Уведомление об успешном платеже'
+        verbose_name_plural = u'Уведомления об успешных платежах (ROBOKASSA)'
