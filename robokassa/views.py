@@ -24,7 +24,7 @@ def receive_result(request):
         # осуществить в обработчике сигнала robokassa.signals.result_received
         result_received.send(sender = notification)
 
-        return HttpResponse('OK'+id)
+        return HttpResponse('OK%s' % id)
     return HttpResponse('error: bad signature')
 
 
