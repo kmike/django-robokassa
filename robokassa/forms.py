@@ -114,8 +114,6 @@ class SuccessRedirectForm(_RedirectPageForm):
     def clean(self):
         data = super(SuccessRedirectForm, self).clean()
         if STRICT_CHECK:
-            try:
-                notification = SuccessNotification.objects.get(InvId=data['InvId'])
-            except SuccessNotification.DoesNotExist:
+            if not SuccessNotification.objects.filter(InvId=data['InvId']):
                 raise forms.ValidationError(u'От ROBOKASSA не было предварительного уведомления')
         return data
