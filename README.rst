@@ -166,7 +166,16 @@ InvId (номер заказа) и OutSum (сумма оплаты) в каче�
 
 Пример::
 
-    from robokassa.signals import result_received, fail_page_visited
+    from robokassa.signals import result_received
+    from my_app.models import Order
+
+    def payment_received(sender, *args, **kwargs):
+        order = Order.objects.get(id=sender.InvId)
+        order.status = 'paid'
+        order.paid_sum = sender.OutSum
+        order.save()
+
+    result_received.connect(payment_received)
 
 
 
