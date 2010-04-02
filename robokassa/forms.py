@@ -116,6 +116,13 @@ class ResultURLForm(BaseRobokassaForm):
             raise forms.ValidationError(u'Ошибка в контрольной сумме')
         return self.cleaned_data
 
+    def extra_params(self):
+        extra = {}
+        for param in EXTRA_PARAMS:
+            if ('shp'+param) in self.cleaned_data:
+                extra[param] = self.cleaned_data['shp'+param]
+        return extra
+
     def _get_signature_string(self):
         _val = lambda name: unicode(self.cleaned_data[name])
         standard_part = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD2])

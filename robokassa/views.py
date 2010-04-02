@@ -42,6 +42,7 @@ def success(request, template_name='robokassa/success.html', extra_context=None,
         success_page_visited.send(sender = form, InvId = id, OutSum = sum)
 
         context = {'InvId': id, 'OutSum': sum, 'form': form}
+        context.update(form.extra_params())
         context.update(extra_context or {})
         return direct_to_template(request, template_name, extra_context=context)
 
@@ -63,6 +64,7 @@ def fail(request, template_name='robokassa/fail.html', extra_context=None,
         fail_page_visited.send(sender = form, InvId = id, OutSum = sum)
 
         context = {'InvId': id, 'OutSum': sum, 'form': form}
+        context.update(form.extra_params())
         context.update(extra_context or {})
         return direct_to_template(request, template_name, extra_context=context)
 

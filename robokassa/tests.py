@@ -43,7 +43,7 @@ class RobokassaFormExtraTest(TestCase):
 
 class ResultURLTest(DjangoTestCase):
 
-    def testFormSignature(self):
+    def testFormExtra(self):
         form = ResultURLForm({
                 'OutSum': '100',
                 'InvId': '58',
@@ -54,6 +54,7 @@ class ResultURLTest(DjangoTestCase):
         self.assertTrue(form.is_valid())
         self.assertEqual(form._get_signature_string(),
                          '100:58:%s:shpparam1=Vasia:shpparam2=None' % (PASSWORD2))
+        self.assertEqual(form.extra_params(), {'param1': 'Vasia', 'param2': 'None'})
 
 
     def testFormValid(self):
