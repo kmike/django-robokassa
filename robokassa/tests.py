@@ -2,7 +2,7 @@
 from unittest import TestCase
 from django.test import TestCase as DjangoTestCase
 from robokassa.forms import RobokassaForm, ResultURLForm
-from robokassa.conf import PASSWORD1, LOGIN, EXTRA_PARAMS
+from robokassa.conf import LOGIN, PASSWORD1, PASSWORD2
 
 class RobokassaFormTest(TestCase):
 
@@ -15,17 +15,17 @@ class RobokassaFormTest(TestCase):
                     })
 
     def testSignature(self):
-        self.assertEqual(self.form._get_signature_string(), '%s:100.0:58:%s' % (LOGIN, PASSWORD1))
+        self.assertEqual(self.form._get_signature_string(),
+                         '%s:100.0:58:%s:shpparam1=None:shpparam2=None' % (LOGIN, PASSWORD1))
         self.assertEqual(len(self.form.fields['SignatureValue'].initial), 32)
-        self.assertEqual(self.form.fields['SignatureValue'].initial, '59506E1E5BBE937B31386DD981788C9B')
 
     def testSignatureMissingParams(self):
         form = RobokassaForm(initial = {'InvId': 5})
-        self.assertEqual(form._get_signature_string(), '%s::5:%s' % (LOGIN, PASSWORD1))
-        self.assertEqual(form.fields['SignatureValue'].initial, 'DCEDD9C5F84C1E6CB73AB52CA9FAA8B3')
+        self.assertEqual(form._get_signature_string(),
+                         '%s::5:%s:shpparam1=None:shpparam2=None' % (LOGIN, PASSWORD1))
 
     def testRedirectUrl(self):
-        url = "https://merchant.roboxchange.com/Index.aspx?MrchLogin=test_login&OutSum=100.0&InvId=58&Desc=%D5%EE%EB%EE%E4%E8%EB%FC%ED%E8%EA+%22%C1%E8%F0%FE%F1%E0%22&SignatureValue=59506E1E5BBE937B31386DD981788C9B&Email=vasia%40example.com"
+        url = "https://merchant.roboxchange.com/Index.aspx?MrchLogin=test_login&OutSum=100.0&InvId=58&Desc=%D5%EE%EB%EE%E4%E8%EB%FC%ED%E8%EA+%22%C1%E8%F0%FE%F1%E0%22&SignatureValue=0EC23BE40003640B35EC07F6615FFB57&Email=vasia%40example.com&shpparam1=None&shpparam2=None"
         self.assertEqual(self.form.get_redirect_url(), url)
 
 
@@ -37,25 +37,47 @@ class RobokassaFormExtraTest(TestCase):
                                 'param1': 'value1',
                                 'param2': 'value2'
                             })
-        self.assertEqual(form._get_signature_string(), '%s:100:58:%s:shpparam1=value1:shpparam2=value2' % (LOGIN, PASSWORD1))
+        self.assertEqual(form._get_signature_string(),
+                         '%s:100:58:%s:shpparam1=value1:shpparam2=value2' % (LOGIN, PASSWORD1))
 
 
 class ResultURLTest(DjangoTestCase):
 
-    def setUp(self):
-        self.valid_data = {
+    def testFormSignature(self):
+        form = ResultURLForm({
                 'OutSum': '100',
                 'InvId': '58',
-                'SignatureValue': '6E75B4F55BEFE22C8DB12778D8EF32C3',
-                'param1': '',
-                'param2': '',
-             }
-        self.invalid_data = {
+                'SignatureValue': 'B2111A06F6B7A1E090D38367BF7032D9',
+                'param1': 'Vasia',
+                'param2': 'None',
+             })
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form._get_signature_string(),
+                         '100:58:%s:shpparam1=Vasia:shpparam2=None' % (PASSWORD2))
+
+
+    def testFormValid(self):
+
+        self.assertTrue(ResultURLForm({
+                'OutSum': '100',
+                'InvId': '58',
+                'SignatureValue': '877D3BAF8381F70E56638C3BC82580C5',
+                'param1': 'None',
+                'param2': 'None',
+             }).is_valid())
+
+        self.assertFalse(ResultURLForm({
                 'OutSum': '101',
                 'InvId': '58',
-                'SignatureValue': '6E75B4F55BEFE22C8DB12778D8EF32C3',
-             }
+                'SignatureValue': '877D3BAF8381F70E56638C3BC82580C5',
+                'param1': 'None',
+                'param2': 'None',
+             }).is_valid())
 
-    def testForm(self):
-        self.assertTrue(ResultURLForm(self.valid_data).is_valid())
-        self.assertFalse(ResultURLForm(self.invalid_data).is_valid())
+        self.assertFalse(ResultURLForm({
+                'OutSum': '100',
+                'InvId': '58',
+                'SignatureValue': '877D3BAF8381F70E56638C3BC82580C5',
+                'param1': 'Vasia',
+                'param2': 'None',
+             }).is_valid())

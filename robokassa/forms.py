@@ -17,6 +17,9 @@ class BaseRobokassaForm(forms.Form):
             self.fields['shp'+key] = forms.CharField(required=False)
             if 'initial' in kwargs:
                 self.fields['shp'+key].initial = kwargs['initial'].get(key, 'None')
+            if self.data:
+                self.data['shp'+key] = self.data.get(key, 'None')
+                del self.data[key]
 
     def _append_extra_part(self, standard_part, value_func):
         extra_part = ":".join(["%s=%s" % ('shp'+key, value_func('shp' + key)) for key in EXTRA_PARAMS])
@@ -109,6 +112,7 @@ class ResultURLForm(BaseRobokassaForm):
 
     def clean(self):
         if self.cleaned_data['SignatureValue'].upper() != self._get_signature():
+#            print self._get_signature()
             raise forms.ValidationError(u'Ошибка в контрольной сумме')
         return self.cleaned_data
 
