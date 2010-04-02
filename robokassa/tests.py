@@ -48,8 +48,8 @@ class ResultURLTest(DjangoTestCase):
                 'OutSum': '100',
                 'InvId': '58',
                 'SignatureValue': 'B2111A06F6B7A1E090D38367BF7032D9',
-                'param1': 'Vasia',
-                'param2': 'None',
+                'shpparam1': 'Vasia',
+                'shpparam2': 'None',
              })
         self.assertTrue(form.is_valid())
         self.assertEqual(form._get_signature_string(),
@@ -63,22 +63,22 @@ class ResultURLTest(DjangoTestCase):
                 'OutSum': '100',
                 'InvId': '58',
                 'SignatureValue': '877D3BAF8381F70E56638C3BC82580C5',
-                'param1': 'None',
-                'param2': 'None',
+                'shpparam1': 'None',
+                'shpparam2': 'None',
              }).is_valid())
 
         self.assertFalse(ResultURLForm({
                 'OutSum': '101',
                 'InvId': '58',
                 'SignatureValue': '877D3BAF8381F70E56638C3BC82580C5',
-                'param1': 'None',
-                'param2': 'None',
+                'shpparam1': 'None',
+                'shpparam2': 'None',
              }).is_valid())
 
         self.assertFalse(ResultURLForm({
                 'OutSum': '100',
                 'InvId': '58',
                 'SignatureValue': '877D3BAF8381F70E56638C3BC82580C5',
-                'param1': 'Vasia',
-                'param2': 'None',
+                'shpparam1': 'Vasia',
+                'shpparam2': 'None',
              }).is_valid())
