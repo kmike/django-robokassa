@@ -11,6 +11,7 @@ settings.configure(
     ROBOKASSA_LOGIN = 'test_login',
     ROBOKASSA_PASSWORD1 = 'test_password',
     ROBOKASSA_PASSWORD2 = 'test_password2',
+    ROBOKASSA_EXTRA_PARAMS = ['param1', 'param2']
 )
 
 if __name__ == "__main__":

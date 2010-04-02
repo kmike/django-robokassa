@@ -2,7 +2,7 @@
 from unittest import TestCase
 from django.test import TestCase as DjangoTestCase
 from robokassa.forms import RobokassaForm, ResultURLForm
-from robokassa.conf import PASSWORD1, LOGIN
+from robokassa.conf import PASSWORD1, LOGIN, EXTRA_PARAMS
 
 class RobokassaFormTest(TestCase):
 
@@ -29,6 +29,17 @@ class RobokassaFormTest(TestCase):
         self.assertEqual(self.form.get_redirect_url(), url)
 
 
+class RobokassaFormExtraTest(TestCase):
+    def testExtra(self):
+        form = RobokassaForm(initial={
+                                'InvId': 58,
+                                'OutSum': 100,
+                                'param1': 'value1',
+                                'param2': 'value2'
+                            })
+        self.assertEqual(form._get_signature_string(), '%s:100:58:%s:shpparam1=value1:shpparam2=value2' % (LOGIN, PASSWORD1))
+
+
 class ResultURLTest(DjangoTestCase):
 
     def setUp(self):
@@ -36,6 +47,8 @@ class ResultURLTest(DjangoTestCase):
                 'OutSum': '100',
                 'InvId': '58',
                 'SignatureValue': '6E75B4F55BEFE22C8DB12778D8EF32C3',
+                'param1': '',
+                'param2': '',
              }
         self.invalid_data = {
                 'OutSum': '101',
