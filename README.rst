@@ -166,18 +166,20 @@ django-robokassa не включает в себя модели "Покупка"
   не была произведена. В обработчике следует осуществлять разблокирвку товара
   на складе и т.д.
 
-Cигналы success_page_visited и fail_page_visited получают параметры
-InvId (номер заказа) и OutSum (сумма оплаты) в качестве параметров.
+Все сигналы получают параметры InvId (номер заказа), OutSum (сумма оплаты) и
+extra (словарь с дополнительными параметрами, описанными в
+ROBOKASSA_EXTRA_PARAMS).
 
 Пример::
 
     from robokassa.signals import result_received
     from my_app.models import Order
 
-    def payment_received(sender, *args, **kwargs):
-        order = Order.objects.get(id=sender.InvId)
+    def payment_received(sender, **kwargs):
+        order = Order.objects.get(id=kwargs['InvId'])
         order.status = 'paid'
-        order.paid_sum = sender.OutSum
+        order.paid_sum = kwargs['OutSum']
+        order.extra_param = kwargs['extra']['my_param']
         order.save()
 
     result_received.connect(payment_received)

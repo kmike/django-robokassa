@@ -22,7 +22,8 @@ def receive_result(request):
 
         # дополнительные действия с заказом (например, смену его статуса) можно
         # осуществить в обработчике сигнала robokassa.signals.result_received
-        result_received.send(sender = notification)
+        result_received.send(sender = notification, InvId = id, OutSum = sum,
+                             extra = form.extra_params())
 
         return HttpResponse('OK%s' % id)
     return HttpResponse('error: bad signature')
@@ -39,7 +40,8 @@ def success(request, template_name='robokassa/success.html', extra_context=None,
 
         # в случае, когда не используется строгая проверка, действия с заказом
         # можно осуществлять в обработчике сигнала robokassa.signals.success_page_visited
-        success_page_visited.send(sender = form, InvId = id, OutSum = sum)
+        success_page_visited.send(sender = form, InvId = id, OutSum = sum,
+                                  extra = form.extra_params())
 
         context = {'InvId': id, 'OutSum': sum, 'form': form}
         context.update(form.extra_params())
@@ -61,7 +63,8 @@ def fail(request, template_name='robokassa/fail.html', extra_context=None,
         # дополнительные действия с заказом (например, смену его статуса для
         # разблокировки товара на складе) можно осуществить в обработчике
         # сигнала robokassa.signals.fail_page_visited
-        fail_page_visited.send(sender = form, InvId = id, OutSum = sum)
+        fail_page_visited.send(sender = form, InvId = id, OutSum = sum,
+                               extra = form.extra_params())
 
         context = {'InvId': id, 'OutSum': sum, 'form': form}
         context.update(form.extra_params())
