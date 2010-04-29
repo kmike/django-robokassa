@@ -22,4 +22,4 @@ if TEST_MODE:
     FORM_TARGET = u'http://test.robokassa.ru/Index.aspx'
 
 # список пользовательских параметров ("shp" к ним приписывать не нужно)
-EXTRA_PARAMS = getattr(settings, 'ROBOKASSA_EXTRA_PARAMS', [])
+EXTRA_PARAMS = sorted(getattr(settings, 'ROBOKASSA_EXTRA_PARAMS', []))
