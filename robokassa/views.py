@@ -3,11 +3,17 @@
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
 
+try:
+    from django.views.decorators.csrf import csrf_exempt
+except ImportError: # django < 1.2
+    from django.contrib.csrf.middleware import csrf_exempt
+
 from robokassa.conf import USE_POST
 from robokassa.forms import ResultURLForm, SuccessRedirectForm, FailRedirectForm
 from robokassa.models import SuccessNotification
 from robokassa.signals import result_received, success_page_visited, fail_page_visited
 
+@csrf_exempt
 def receive_result(request):
     """ обработчик для ResultURL. """
     data = request.POST if USE_POST else request.GET
@@ -29,6 +35,7 @@ def receive_result(request):
     return HttpResponse('error: bad signature')
 
 
+@csrf_exempt
 def success(request, template_name='robokassa/success.html', extra_context=None,
             error_template_name = 'robokassa/error.html'):
     """ обработчик для SuccessURL """
@@ -51,6 +58,7 @@ def success(request, template_name='robokassa/success.html', extra_context=None,
     return direct_to_template(request, error_template_name, extra_context={'form': form})
 
 
+@csrf_exempt
 def fail(request, template_name='robokassa/fail.html', extra_context=None,
          error_template_name = 'robokassa/error.html'):
     """ обработчик для FailURL """
