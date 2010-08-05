@@ -82,3 +82,6 @@ class ResultURLTest(DjangoTestCase):
                 'shpparam1': 'Vasia',
                 'shpparam2': 'None',
              }).is_valid())
+
+    def testEmptyFormValid(self):
+        self.assertFalse(ResultURLForm().is_valid())

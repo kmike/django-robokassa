@@ -108,9 +108,13 @@ class ResultURLForm(BaseRobokassaForm):
     SignatureValue = forms.CharField(max_length=32)
 
     def clean(self):
-        if self.cleaned_data['SignatureValue'].upper() != self._get_signature():
-#            print self._get_signature()
-            raise forms.ValidationError(u'Ошибка в контрольной сумме')
+        try:
+            signature = self.cleaned_data['SignatureValue'].upper()
+            if signature != self._get_signature():
+                raise forms.ValidationError(u'Ошибка в контрольной сумме')
+        except KeyError:
+            raise forms.ValidationError(u'Пришли не все необходимые параметры')
+
         return self.cleaned_data
 
     def extra_params(self):
