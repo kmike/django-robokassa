@@ -13,8 +13,7 @@ setup(
 
     packages=['robokassa', 'robokassa.migrations'],
 
-    url='http://bitbucket.org/kmike/django-robokassa/',
-    download_url = 'http://bitbucket.org/kmike/django-robokassa/get/tip.zip',
+    url='https://bitbucket.org/kmike/django-robokassa/',
     license = 'MIT license',
     description = u'Приложение для интеграции платежной системы ROBOKASSA в проекты на Django.'.encode('utf8'),
     long_description = open('README.rst').read().decode('utf8'),
