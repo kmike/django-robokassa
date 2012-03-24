@@ -22,12 +22,10 @@ pip-log.txt
 .DS_Store
 Thumbs.db
 
-#doc files
-docs/_build/doctrees/
-
 #setup files
 build/
 dist/
 .build/
 MANIFEST
+django_robokassa.egg-info
 .tox
