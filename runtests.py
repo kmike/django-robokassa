@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.management import call_command
 
 settings.configure(
-    INSTALLED_APPS=('robokassa',),
+    INSTALLED_APPS=('robokassa', 'south'),
     DATABASE_ENGINE = 'sqlite3',
     DATABASES = {
         'default': {
