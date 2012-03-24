@@ -216,3 +216,27 @@ urls.py
 * ``robokassa/error.html`` - показывается при ошибочном запросе к странице
   "успех" или "неудача" (например, при ошибке в контрольной сумме). В контексте
   есть переменная form класса ``FailRedirectForm`` или ``SuccessRedirectForm``.
+
+Разработка
+==========
+
+Разработка ведется на bitbucket и github:
+
+* https://bitbucket.org/kmike/django-robokassa/
+* https://github.com/kmike/django-robokassa
+
+Пожелания, идеи, баг-репорты и тд. пишите в трекер: https://bitbucket.org/kmike/django-robokassa/issues
+
+Лицензия - MIT.
+
+Тестирование
+------------
+
+Для запуска тестов установите `tox <http://tox.testrun.org/>`_, склонируйте репозиторий
+и выполните команду
+
+::
+
+    $ tox
+
+из корня репозитория.
