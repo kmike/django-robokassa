@@ -1,12 +1,8 @@
 #coding: utf-8
 
 from django.http import HttpResponse
-from django.views.generic.simple import direct_to_template
-
-try:
-    from django.views.decorators.csrf import csrf_exempt
-except ImportError: # django < 1.2
-    from django.contrib.csrf.middleware import csrf_exempt
+from django.template.response import TemplateResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from robokassa.conf import USE_POST
 from robokassa.forms import ResultURLForm, SuccessRedirectForm, FailRedirectForm
@@ -53,9 +49,9 @@ def success(request, template_name='robokassa/success.html', extra_context=None,
         context = {'InvId': id, 'OutSum': sum, 'form': form}
         context.update(form.extra_params())
         context.update(extra_context or {})
-        return direct_to_template(request, template_name, extra_context=context)
+        return TemplateResponse(request, template_name, context)
 
-    return direct_to_template(request, error_template_name, extra_context={'form': form})
+    return TemplateResponse(request, error_template_name, {'form': form})
 
 
 @csrf_exempt
@@ -77,7 +73,7 @@ def fail(request, template_name='robokassa/fail.html', extra_context=None,
         context = {'InvId': id, 'OutSum': sum, 'form': form}
         context.update(form.extra_params())
         context.update(extra_context or {})
-        return direct_to_template(request, template_name, extra_context=context)
+        return TemplateResponse(request, template_name, context)
 
-    return direct_to_template(request, error_template_name, extra_context={'form': form})
+    return TemplateResponse(request, error_template_name, {'form': form})
 
