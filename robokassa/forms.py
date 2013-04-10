@@ -131,7 +131,7 @@ class ResultURLForm(BaseRobokassaForm):
 
 
 class _RedirectPageForm(ResultURLForm):
-    '''Форма для проверки контрольной суммы на страницах Success и Fail'''
+    '''Форма для проверки контрольной суммы на странице Success'''
 
     Culture = forms.CharField(max_length=10)
 
@@ -140,10 +140,6 @@ class _RedirectPageForm(ResultURLForm):
         standard_part = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD1])
         return self._append_extra_part(standard_part, _val)
 
-
-class FailRedirectForm(_RedirectPageForm):
-    '''Форма для проверки контрольной суммы на странице Fail'''
-    pass
 
 class SuccessRedirectForm(_RedirectPageForm):
     """ Форма для обработки страницы Success с дополнительной защитой. Она
@@ -156,3 +152,29 @@ class SuccessRedirectForm(_RedirectPageForm):
             if not SuccessNotification.objects.filter(InvId=data['InvId']):
                 raise forms.ValidationError(u'От ROBOKASSA не было предварительного уведомления')
         return data
+
+
+class FailResultURLForm(BaseRobokassaForm):
+    '''Форма для приема результатов и проверки контрольной суммы '''
+    OutSum = forms.CharField(max_length=15)
+    InvId = forms.IntegerField(min_value=0)
+
+
+    def extra_params(self):
+        extra = {}
+        for param in EXTRA_PARAMS:
+            if ('shp'+param) in self.cleaned_data:
+                extra[param] = self.cleaned_data['shp'+param]
+        return extra
+
+
+class _FailRedirectPageForm(FailResultURLForm):
+    '''Culture'''
+
+    Culture = forms.CharField(max_length=10)
+
+
+class FailRedirectForm(_FailRedirectPageForm):
+    '''Форма для проверки контрольной суммы на странице Fail'''
+    
+    pass
