@@ -24,6 +24,13 @@ class BaseRobokassaForm(forms.Form):
             return ':'.join([standard_part, extra_part])
         return standard_part
 
+    def extra_params(self):
+        extra = {}
+        for param in EXTRA_PARAMS:
+            if ('shp'+param) in self.cleaned_data:
+                extra[param] = self.cleaned_data['shp'+param]
+        return extra
+
     def _get_signature(self):
         return md5(self._get_signature_string()).hexdigest().upper()
 
@@ -117,13 +124,6 @@ class ResultURLForm(BaseRobokassaForm):
 
         return self.cleaned_data
 
-    def extra_params(self):
-        extra = {}
-        for param in EXTRA_PARAMS:
-            if ('shp'+param) in self.cleaned_data:
-                extra[param] = self.cleaned_data['shp'+param]
-        return extra
-
     def _get_signature_string(self):
         _val = lambda name: unicode(self.cleaned_data[name])
         standard_part = ':'.join([_val('OutSum'), _val('InvId'), PASSWORD2])
@@ -154,14 +154,9 @@ class SuccessRedirectForm(_RedirectPageForm):
         return data
 
 class FailRedirectForm(BaseRobokassaForm):
-    '''Форма для приема результатов'''
+    '''Форма приема результатов для перенаправления на страницу Fail'''
     OutSum = forms.CharField(max_length=15)
     InvId = forms.IntegerField(min_value=0)
     Culture = forms.CharField(max_length=10)
 
-    def extra_params(self):
-        extra = {}
-        for param in EXTRA_PARAMS:
-            if ('shp'+param) in self.cleaned_data:
-                extra[param] = self.cleaned_data['shp'+param]
-        return extra
+    
