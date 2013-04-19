@@ -78,8 +78,8 @@ Robokassa, в django-robokassa есть форма RobokassaForm. Она нуж�
     from robokassa.forms import RobokassaForm
 
     @login_required
-    def pay_with_robokassa(request, order_id)
-        order = get_object_or_404(Order, pk = order_id)
+    def pay_with_robokassa(request, order_id):
+        order = get_object_or_404(Order, pk=order_id)
 
         form = RobokassaForm(initial={
                    'OutSum': order.total,
