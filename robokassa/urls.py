@@ -1,9 +1,9 @@
 #coding: utf-8
-import django.conf.urls as urls
-if getattr(urls, 'defaults', None):
-    from django.conf.urls.defaults import *
-else:
-    from django.conf.urls import patterns, include, url
+try:
+    from django.conf.urls.defaults import patterns, url
+except ImportError:
+    from django.conf.urls import patterns, url
+    
 
 urlpatterns = patterns('robokassa.views',
     url(
