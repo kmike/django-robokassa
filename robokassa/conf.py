@@ -18,8 +18,13 @@ TEST_MODE = getattr(settings, 'ROBOKASSA_TEST_MODE', False)
 
 # url, по которому будет идти отправка форм
 FORM_TARGET = u'https://merchant.roboxchange.com/Index.aspx'
+
 if TEST_MODE:
-    FORM_TARGET = u'http://test.robokassa.ru/Index.aspx'
+    FORM_TARGET = getattr(
+        settings, 
+        'ROBOKASSA_TEST_FORM_TARGET', 
+        u'http://test.robokassa.ru/Index.aspx'
+    )
 
 # список пользовательских параметров ("shp" к ним приписывать не нужно)
 EXTRA_PARAMS = sorted(getattr(settings, 'ROBOKASSA_EXTRA_PARAMS', []))
