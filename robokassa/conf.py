@@ -22,7 +22,7 @@ FORM_TARGET = u'https://merchant.roboxchange.com/Index.aspx'
 if TEST_MODE:
     FORM_TARGET = getattr(
         settings, 
-        'ROBOKASSA_FORM_TARGET', 
+        'ROBOKASSA_TEST_FORM_TARGET', 
         u'http://test.robokassa.ru/Index.aspx'
     )
 
