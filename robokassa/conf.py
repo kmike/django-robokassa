@@ -23,7 +23,7 @@ if TEST_MODE:
     FORM_TARGET = getattr(
         settings, 
         'ROBOKASSA_TEST_FORM_TARGET', 
-        u'http://test.robokassa.ru/Index.aspx'
+        u'https://auth.robokassa.ru/Merchant/Index.aspx'
     )
 
 # список пользовательских параметров ("shp" к ним приписывать не нужно)
