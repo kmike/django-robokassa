@@ -1,0 +1,6 @@
+.tox
+*.pyc
+MANIFEST
+build/
+dist/
+django_robokassa.egg-info
