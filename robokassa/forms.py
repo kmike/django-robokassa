@@ -4,7 +4,7 @@ from hashlib import md5
 from urllib import urlencode
 from django import forms
 
-from robokassa.conf import LOGIN, PASSWORD1, PASSWORD2
+from robokassa.conf import LOGIN, PASSWORD1, PASSWORD2, TEST_MODE
 from robokassa.conf import STRICT_CHECK, FORM_TARGET, EXTRA_PARAMS
 from robokassa.models import SuccessNotification
 
@@ -71,6 +71,10 @@ class RobokassaForm(BaseRobokassaForm):
     def __init__(self, *args, **kwargs):
 
         super(RobokassaForm, self).__init__(*args, **kwargs)
+
+        if TEST_MODE is True:
+            self.fields['isTest'] = forms.BooleanField(required=False)
+            self.fields['isTest'].initial = 1
 
         # скрытый виджет по умолчанию
         for field in self.fields:
